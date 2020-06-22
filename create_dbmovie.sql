@@ -6,6 +6,7 @@ create user cinema identified by cinema;
 grant connect,resource to cinema;
 grant create view to cinema;
 grant create role to cinema;
+GRANT UNLIMITED TABLESPACE TO cinema;
 
 connect cinema/cinema;
 
