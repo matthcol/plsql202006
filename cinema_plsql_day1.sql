@@ -1,5 +1,5 @@
 create sequence seq_stars;
-
+create sequence seq_movies;
 
 create or replace trigger trig_pk_stars
 before insert on stars
@@ -10,6 +10,16 @@ begin
 end;
 /
 
+create or replace trigger trig_pk_movies
+before insert on movies
+for each row -- pour pouvir accéder à chaque ligne modifiée
+begin
+    -- :new désigne la ligne en cours d'insertion  : NULL | name | birthdate
+    select seq_movies.nextval INTO :new.num_movie from dual;
+end;
+/
+
+
 select seq_stars.nextval from dual;
 select seq_stars.currval from dual;
 
@@ -18,8 +28,9 @@ select seq_stars.currval from dual;
 -- insert into stars (num_star,name) values(2,'Guillaume Pierret');
 insert into stars (name) values('Stéphanie');
 insert into stars (name) values('Guillaume Pierret');
-
+insert into movies (title, year, num_director) values ('Balle Perdue',2020, 22); 
 select * from stars;
+select * from movies;
 
 commit;
 rollback;
