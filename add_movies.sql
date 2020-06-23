@@ -1,3 +1,18 @@
+create or replace procedure add_movie(
+    p_title movies.title%type,
+    p_year movies.year%type,
+    p_duration movies.duration%type default NULL,
+    p_genre movies.genre%type default 'Drama',
+    p_name stars.name%type,
+    p_num_movie OUT movies.num_movie%type)
+is
+begin
+    null;
+end;
+/
+
+
+
 declare
     v_num_movie movies.num_movie%type;
 begin
@@ -28,7 +43,7 @@ end;
 select * from movies left join stars on num_director = num_star;
 
 select s.*, listagg(m.title, ', ') within group (order by year) as filmographie
-from stars s join movies m on num_director = num_star group by num_star, name, birthdate;
+from stars s left join movies m on num_director = num_star group by num_star, name, birthdate;
 
 -- rollback the previous scenario
 rollback;
