@@ -5,7 +5,7 @@ create or replace trigger trig_pk_stars
 before insert on stars -- before checking integrity constraints
 for each row -- to deal with each row inserted
 begin
-    -- :new désigne la ligne en cours d'insertion  : 
+    -- :new reference cuurent row inserted  : 
 	-- num_star | name   | birthdate
 	-- NULL     | a_name | a_birthdate
     select seq_stars.nextval INTO :new.num_star from dual;
@@ -16,7 +16,7 @@ create or replace trigger trig_pk_movies
 before insert on movies
 for each row 
 begin
-    -- autre écriture pour affecter le numero de sequence
+    -- simpliest form to assign variable with sequence value (not possible with old oracle versions)
     :new.num_movie := seq_movies.nextval;
 end;
 /
