@@ -13,8 +13,10 @@ begin
     add_movie('Shame',2011, p_name=>'Steve McQueen', p_num_movie=>v_num_movie);
     -- no ambiguity with the birthdate :
     add_movie('Shame',2011, p_name=>'Steve McQueen',p_birthdate=>'09/10/1969', p_num_movie=>v_num_movie);
+    -- Add movie with director known by id :
+    add_movie('Hunger',2008, p_num_director=> 5, p_num_movie=>v_num_movie);
     -- Error : with a wrong primary key :
-    add_movie('Hunger',2008, p_num_director=>102, p_num_movie=>v_num_movie);
+    add_movie('12 Years A Slave',2013, p_num_director=>100000, p_num_movie=>v_num_movie);
     -- Errors : no title or no year for the movie
     add_movie(NULL,2008, p_num_movie=>v_num_movie);
     add_movie('The Getaway',NULL, p_num_movie=>v_num_movie);
