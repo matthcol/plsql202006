@@ -1,3 +1,5 @@
+set SERVEROUTPUT ON;
+
 create or replace procedure add_movie(
     p_title movies.title%type,
     p_year movies.year%type,
@@ -6,18 +8,30 @@ create or replace procedure add_movie(
     p_name stars.name%type,
     p_num_movie OUT movies.num_movie%type)
 is
+    v_nb_director pls_integer;
+    v_num_director stars.num_star%type;
 begin
     null;
+    -- le realisateur p_name existe-t-il ?
+    select count(*) into v_nb_director from stars where name like p_name;
+    if v_nb_director > 0 then -- director exists in the database
+        dbms_output.put_line(p_name || ' exists');
+        select num_star into v_num_director from stars where name like p_name;
+    else
+        dbms_output.put_line(p_name || ' doesn''t exist');
+    end if;
+    insert into movies (title,year,duration,genre,num_director)
+        values (p_title, p_year, p_duration, p_genre, v_num_director);
 end;
 /
 
-
+select count(*) from stars where name like 'Clint Eastwood';
 
 declare
     v_num_movie movies.num_movie%type;
 begin
     -- without a director :
-    add_movie('Django Unchained',2012,165, p_num_movie=>v_num_movie);
+    -- add_movie('Django Unchained',2012,165, p_num_movie=>v_num_movie);
     -- with a director already in the database (no homonyms) :
     add_movie('Kill Bill: Vol. 1',2003,111, p_name=>'Quentin Tarantino', p_num_movie=>v_num_movie);
     -- with a new director :
@@ -25,17 +39,17 @@ begin
     -- with the director just added before :
     add_movie('Gran Torino',2008, p_name=>'Clint Eastwood', p_num_movie=>v_num_movie);
     -- Error : with a director already there but with homonyms :
-    add_movie('Shame',2011, p_name=>'Steve McQueen', p_num_movie=>v_num_movie);
+    -- add_movie('Shame',2011, p_name=>'Steve McQueen', p_num_movie=>v_num_movie);
     -- no ambiguity with the birthdate :
-    add_movie('Shame',2011, p_name=>'Steve McQueen',p_birthdate=>'09/10/1969', p_num_movie=>v_num_movie);
+    -- add_movie('Shame',2011, p_name=>'Steve McQueen',p_birthdate=>'09/10/1969', p_num_movie=>v_num_movie);
     -- Add movie with director known by id :
-    add_movie('Hunger',2008, p_num_director=> 5, p_num_movie=>v_num_movie);
+    -- add_movie('Hunger',2008, p_num_director=> 5, p_num_movie=>v_num_movie);
     -- Error : with a wrong primary key :
-    add_movie('12 Years A Slave',2013, p_num_director=>100000, p_num_movie=>v_num_movie);
+    -- add_movie('12 Years A Slave',2013, p_num_director=>100000, p_num_movie=>v_num_movie);
     -- Errors : no title or no year for the movie
-    add_movie(NULL,2008, p_num_movie=>v_num_movie);
-    add_movie('The Getaway',NULL, p_num_movie=>v_num_movie);
-    add_movie(NULL,NULL, p_num_movie=>v_num_movie);
+    -- add_movie(NULL,2008, p_num_movie=>v_num_movie);
+    -- add_movie('The Getaway',NULL, p_num_movie=>v_num_movie);
+    -- add_movie(NULL,NULL, p_num_movie=>v_num_movie);
 end;
 /
 
